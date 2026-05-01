@@ -36,6 +36,9 @@ def register():
     )
 
 
+from ..extensions import limiter
+
+@limiter.limit("5 per minute")
 def login():
     try:
         payload = _login_schema.load(request.get_json(silent=True) or {})

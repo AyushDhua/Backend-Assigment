@@ -28,3 +28,5 @@ htmlcov/
 
 node_modules/
 .next/
+PRD.md
+!PRD.example.md

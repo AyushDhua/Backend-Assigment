@@ -56,8 +56,23 @@ def place_order(
     log_params = {**params, "_quantity_decimal": str(cleaned["quantity"])}
     logger.info("Submitting Binance futures order: %s", log_params)
 
+    from tenacity import retry, stop_after_attempt, wait_fixed, retry_if_exception_type
+    import requests
+
+    @retry(
+        stop=stop_after_attempt(3),
+        wait=wait_fixed(2),
+        retry=retry_if_exception_type((BinanceAPIException, requests.exceptions.RequestException)),
+        reraise=True
+    )
+    def _execute(client, params):
+        return client.futures_create_order(timeout=5, **params)
+
     try:
-        response = client.futures_create_order(**params)
+        response = _execute(client, params)
+    except requests.exceptions.RequestException as exc:
+        logger.error("Binance network/timeout error: %s", exc)
+        raise TradingExecutionError("External API unavailable") from exc
     except BinanceAPIException as exc:
         logger.error("Binance API error code=%s msg=%s", exc.code, exc.message)
         raise TradingExecutionError(exc.message, exchange_code=exc.code) from exc

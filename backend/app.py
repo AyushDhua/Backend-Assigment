@@ -5,7 +5,7 @@ import click
 from flask import Flask
 
 from .config import get_config
-from .extensions import db, jwt
+from .extensions import db, jwt, migrate, limiter
 from .utils.error_handler import register_error_handlers
 from .utils.logger import configure_logging
 from .utils.response import error_response
@@ -35,6 +35,8 @@ def create_app(config_name: str | None = None) -> Flask:
 def _register_extensions(app: Flask) -> None:
     db.init_app(app)
     jwt.init_app(app)
+    migrate.init_app(app, db)
+    limiter.init_app(app)
 
 
 def _register_models() -> None:
@@ -79,9 +81,8 @@ def _register_health_route(app: Flask) -> None:
 def _register_cli_commands(app: Flask) -> None:
     @app.cli.command("init-db")
     def init_db_command():
-        """Create all database tables defined by SQLAlchemy models."""
-        db.create_all()
-        click.echo("Database tables created.")
+        """Create all database tables defined by SQLAlchemy models. (Deprecated: Use Flask-Migrate)"""
+        click.echo("Please use 'flask db init', 'flask db migrate', and 'flask db upgrade' instead.")
 
     @app.cli.command("drop-db")
     def drop_db_command():
