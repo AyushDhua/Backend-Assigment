@@ -19,6 +19,12 @@ export default function Dashboard() {
     
     try {
       const decoded = jwtDecode(token);
+      const currentTime = Date.now() / 1000;
+      if (decoded.exp && decoded.exp < currentTime) {
+        localStorage.removeItem('token');
+        router.push('/login');
+        return;
+      }
       setUser(decoded);
     } catch (err) {
       localStorage.removeItem('token');
