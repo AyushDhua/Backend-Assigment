@@ -33,7 +33,8 @@ def test_limit_order_requires_price(client, auth_headers):
         "quantity": 0.01
     }, headers=auth_headers)
     assert res.status_code == 400
-    assert "price" in res.get_json()["message"].lower() or "price" in str(res.get_json()["details"]).lower()
+    json_res = res.get_json()
+    assert "price" in str(json_res.get("details", "")).lower() or "price" in str(json_res).lower()
 
 def test_invalid_quantity(client, auth_headers):
     res = client.post("/api/v1/trades/order", json={

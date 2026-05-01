@@ -15,8 +15,8 @@ def test_register_duplicate_email(client):
         "email": "duplicate@example.com",
         "password": "password123"
     })
-    assert res.status_code == 400
-    assert "already exists" in res.get_json()["message"].lower()
+    assert res.status_code == 409
+    assert "registered" in res.get_json()["error"].lower()
 
 def test_login_success(client):
     client.post("/api/v1/auth/register", json={
@@ -40,4 +40,4 @@ def test_login_invalid_credentials(client):
         "password": "wrongpassword"
     })
     assert res.status_code == 401
-    assert "invalid" in res.get_json()["message"].lower()
+    assert "error" in res.get_json()

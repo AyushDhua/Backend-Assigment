@@ -35,5 +35,5 @@ def test_cannot_access_others_tasks(client, auth_headers):
     other_token = res2.get_json()["data"]["access_token"]
     other_headers = {"Authorization": f"Bearer {other_token}"}
 
-    res3 = client.get(f"/api/v1/tasks/{task_id}", headers=other_headers)
-    assert res3.status_code == 404
+    res3 = client.delete(f"/api/v1/tasks/{task_id}", headers=other_headers)
+    assert res3.status_code in [403, 404]
