@@ -6,6 +6,7 @@ from flask import Flask
 
 from .config import get_config
 from .extensions import db, jwt, migrate, limiter
+from flask_cors import CORS
 from .utils.error_handler import register_error_handlers
 from .utils.logger import configure_logging
 from .utils.response import error_response
@@ -17,6 +18,7 @@ def create_app(config_name: str | None = None) -> Flask:
     app = Flask(__name__)
     app.config.from_object(get_config(config_name))
     app.url_map.strict_slashes = False
+    CORS(app)
 
     configure_logging(app)
     logger.info("Starting app in %s mode", app.config.get("ENV", "development"))
