@@ -4,6 +4,9 @@
 
 This project is a production-ready, scalable backend system integrated with a cryptocurrency trading engine. It demonstrates industry-standard architectural patterns, secure authentication mechanisms, and resilient external API integrations. Designed to operate identically via a RESTful API and a Command Line Interface (CLI), the system allows users to securely authenticate, manage tasks, and execute live cryptocurrency trades via the Binance Futures Testnet.
 
+https://github.com/user-attachments/assets/87fdecd9-e3ac-415c-9526-5ee610e4d49f
+
+
 ## 2. Features
 
 **Authentication & Authorization**
